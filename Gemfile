@@ -37,6 +37,7 @@ group :production do
   gem 'json'
   gem 'dogapi'
   gem 'aws-ses'
+  gem 'azure'
 end
 
 gem 'rspec'
