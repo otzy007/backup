@@ -27,7 +27,15 @@ module Backup
 
       def transfer!
         blob_service = Azure::BlobService.new
-        container = blob_service.get_container_properties(container_name)
+        begin
+          container = blob_service.get_container_properties(container_name)
+        rescue Azure::Core::Http::HTTPError => e
+          if e.status_code == 404
+            container = blob_service.create_container(container_name)
+          else
+            fail e
+          end
+        end
 
         package.filenames.each do |filename|
           src = File.join(Config.tmp_path, filename)
